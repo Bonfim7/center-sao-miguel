@@ -9,10 +9,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
+    <link rel="stylesheet" href="/theme/app.css?v={{ filemtime(public_path('assets/css/app.css')) }}">
 </head>
 <body class="@yield('body-class')">
     @yield('content')
-    <script src="{{ asset('assets/js/app.js') }}" defer></script>
+    <script src="/theme/app.js?v={{ filemtime(public_path('assets/js/app.js')) }}" defer></script>
 </body>
 </html>

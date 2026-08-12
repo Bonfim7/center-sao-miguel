@@ -16,4 +16,10 @@ class ExampleTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    public function test_theme_assets_are_served_with_the_correct_content_type(): void
+    {
+        $this->get('/theme/app.css')->assertOk()->assertHeader('Content-Type', 'text/css; charset=UTF-8');
+        $this->get('/theme/app.js')->assertOk()->assertHeader('Content-Type', 'application/javascript; charset=UTF-8');
+    }
 }

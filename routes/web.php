@@ -1,8 +1,12 @@
 <?php
 
+use App\Http\Controllers\AssetController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EventController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/theme/app.css', [AssetController::class, 'css'])->name('assets.css');
+Route::get('/theme/app.js', [AssetController::class, 'javascript'])->name('assets.javascript');
 
 Route::middleware('guest')->group(function () {
     Route::get('/', [AuthController::class, 'create'])->name('login');
