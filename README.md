@@ -30,3 +30,9 @@ Acesse `http://127.0.0.1:8000`.
 - Visualização: `visitante@centralsaomiguel.com.br` / `0000`
 
 Troque essas senhas antes de publicar em produção.
+
+## Demonstração no Render
+
+Crie um Web Service com runtime `Docker`. O container prepara automaticamente o banco, executa as migrações e inicia o Apache na porta fornecida pelo Render.
+
+Para uma demonstração descartável, configure `DB_CONNECTION=sqlite` e `DB_DATABASE=/tmp/database.sqlite`. Os dados podem ser reiniciados a cada novo deploy. Em produção, use PostgreSQL.
