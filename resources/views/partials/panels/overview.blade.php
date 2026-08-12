@@ -1,7 +1,7 @@
 <section class="tab-panel active" id="overview">
     <div class="welcome-card">
         <div><span class="eyebrow">Agenda pastoral</span><h2>Vamos construir<br>algo bonito juntos.</h2><p>Acompanhe os encontros e mantenha toda a comunidade em sintonia.</p></div>
-        <div class="orb"><span>✦</span></div>
+        <div class="orb"><img src="{{ asset('assets/images/brasao-paroquia-sao-miguel.png') }}" alt="Brasão da Paróquia São Miguel Arcanjo"></div>
     </div>
     <div class="metrics">
         <article class="metric-card"><span class="metric-icon wine">◫</span><div><strong>{{ $total }}</strong><small>Total de eventos</small></div></article>

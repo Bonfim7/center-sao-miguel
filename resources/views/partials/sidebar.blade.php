@@ -1,6 +1,6 @@
 <aside class="sidebar">
     <div class="brand brand-light">
-        <span class="brand-mark">SM</span>
+        <img class="brand-logo" src="{{ asset('assets/images/brasao-paroquia-sao-miguel.png') }}" alt="Brasão da Paróquia São Miguel Arcanjo">
         <span>Central São Miguel<small>Gestão pastoral</small></span>
     </div>
 
