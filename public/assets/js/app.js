@@ -1,14 +1,29 @@
 document.addEventListener('DOMContentLoaded', () => {
     const panels = document.querySelectorAll('.tab-panel');
     const navLinks = document.querySelectorAll('.nav-link');
+    const sidebar = document.querySelector('.sidebar');
+    const closeSidebar = () => {
+        sidebar?.classList.remove('open');
+        document.body.classList.remove('menu-open');
+    };
     const showTab = id => {
         panels.forEach(panel => panel.classList.toggle('active', panel.id === id));
         navLinks.forEach(link => link.classList.toggle('active', link.dataset.tab === id));
-        document.querySelector('.sidebar')?.classList.remove('open');
+        closeSidebar();
     };
     navLinks.forEach(link => link.addEventListener('click', () => showTab(link.dataset.tab)));
     document.querySelectorAll('[data-go]').forEach(link => link.addEventListener('click', () => showTab(link.dataset.go)));
-    document.querySelector('.menu-toggle')?.addEventListener('click', () => document.querySelector('.sidebar')?.classList.toggle('open'));
+    document.querySelector('.menu-toggle')?.addEventListener('click', () => {
+        sidebar?.classList.toggle('open');
+        document.body.classList.toggle('menu-open', sidebar?.classList.contains('open'));
+    });
+    document.querySelector('.sidebar-backdrop')?.addEventListener('click', closeSidebar);
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') closeSidebar();
+    });
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 900) closeSidebar();
+    });
 
     const search = document.querySelector('#eventSearch');
     search?.addEventListener('input', () => document.querySelectorAll('#eventList .event-row').forEach(row => {

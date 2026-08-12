@@ -6,6 +6,7 @@
 @section('content')
 <div class="app-shell">
     @include('partials.sidebar')
+    <button class="sidebar-backdrop" type="button" aria-label="Fechar menu"></button>
 
     <main class="content">
         @include('partials.topbar')
