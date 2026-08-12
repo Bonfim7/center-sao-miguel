@@ -25,9 +25,14 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     document.querySelector('[data-open-modal]')?.addEventListener('click', () => { resetForm(); modal.showModal(); });
     document.querySelectorAll('.modal-close').forEach(button => button.addEventListener('click', () => modal.close()));
-    document.querySelectorAll('.edit-event').forEach(button => button.addEventListener('click', () => {
-        const event = JSON.parse(button.dataset.event); resetForm();
-        form.action = `${window.eventUpdateBase}/${event.id}`; document.querySelector('#formMethod').value = 'PUT';
+    document.querySelectorAll('.delete-event-form').forEach(deleteForm => deleteForm.addEventListener('submit', event => {
+        if (!confirm('Excluir este evento?')) event.preventDefault();
+    }));
+    document.querySelectorAll('.edit-event').forEach(button => button.addEventListener('click', async () => {
+        const response = await fetch(`/eventos/${button.dataset.eventId}`, { headers: { Accept: 'application/json' } });
+        if (!response.ok) return;
+        const event = await response.json(); resetForm();
+        form.action = `/eventos/${event.id}`; document.querySelector('#formMethod').value = 'PUT';
         document.querySelector('#modalTitle').textContent = 'Editar evento';
         ['name','type','date','time','place','responsible','group','status','priority','notes'].forEach(key => {
             const field = form.elements[key]; if (field) field.value = event[key] ?? '';
@@ -36,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }));
 
     if (!document.querySelector('#calendarGrid')) return;
-    const events = window.calendarEvents || [];
+    let events = [];
     let cursor = new Date(); cursor.setDate(1);
     const months = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
     const renderCalendar = () => {
@@ -55,5 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     document.querySelector('#prevMonth').addEventListener('click', () => { cursor.setMonth(cursor.getMonth() - 1); renderCalendar(); });
     document.querySelector('#nextMonth').addEventListener('click', () => { cursor.setMonth(cursor.getMonth() + 1); renderCalendar(); });
-    renderCalendar();
+    fetch('/calendario/eventos', { headers: { Accept: 'application/json' } })
+        .then(response => response.json())
+        .then(data => { events = data; renderCalendar(); });
 });

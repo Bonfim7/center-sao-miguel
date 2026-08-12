@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -21,10 +22,28 @@ class EventController extends Controller
             'confirmed' => $events->where('status', 'Confirmado')->count(),
             'nextSevenDays' => $events->filter(fn ($event) => $event->date->between($today, $today->copy()->addDays(7)))->count(),
             'highPriority' => $events->where('priority', 'Alta')->count(),
-            'calendarEvents' => $events->map(fn ($event) => [
-                'id' => $event->id, 'name' => $event->name, 'date' => $event->date->format('Y-m-d'),
-                'time' => substr($event->time, 0, 5), 'status' => $event->status,
-            ])->values(),
+        ]);
+    }
+
+    public function calendar(): JsonResponse
+    {
+        return response()->json(Event::orderBy('date')->get()->map(fn (Event $event) => [
+            'id' => $event->id,
+            'name' => $event->name,
+            'date' => $event->date->format('Y-m-d'),
+            'time' => substr($event->time, 0, 5),
+            'status' => $event->status,
+        ]));
+    }
+
+    public function show(Request $request, Event $event): JsonResponse
+    {
+        $this->authorizeAdmin($request);
+
+        return response()->json([
+            ...$event->only(['id', 'name', 'type', 'place', 'responsible', 'group', 'status', 'priority', 'notes', 'needs_publicity']),
+            'date' => $event->date->format('Y-m-d'),
+            'time' => substr($event->time, 0, 5),
         ]);
     }
 

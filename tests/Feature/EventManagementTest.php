@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Event;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -37,5 +38,31 @@ class EventManagementTest extends TestCase
         ])->assertForbidden();
 
         $this->assertDatabaseCount('events', 0);
+    }
+
+    public function test_authenticated_user_can_load_calendar_data(): void
+    {
+        $viewer = User::factory()->create(['role' => 'viewer']);
+        Event::create([
+            'name' => 'Missa da Família', 'type' => 'Missa', 'date' => '2026-10-04', 'time' => '19:00',
+            'status' => 'Confirmado', 'priority' => 'Média',
+        ]);
+
+        $this->actingAs($viewer)->getJson('/calendario/eventos')
+            ->assertOk()
+            ->assertJsonFragment(['name' => 'Missa da Família', 'date' => '2026-10-04']);
+    }
+
+    public function test_only_admin_can_load_event_edit_data(): void
+    {
+        $event = Event::create([
+            'name' => 'Formação', 'type' => 'Formação', 'date' => '2026-10-08', 'time' => '20:00',
+            'status' => 'Planejado', 'priority' => 'Baixa',
+        ]);
+        $viewer = User::factory()->create(['role' => 'viewer']);
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        $this->actingAs($viewer)->getJson("/eventos/{$event->id}")->assertForbidden();
+        $this->actingAs($admin)->getJson("/eventos/{$event->id}")->assertOk()->assertJsonFragment(['name' => 'Formação']);
     }
 }

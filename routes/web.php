@@ -11,6 +11,8 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/painel', [EventController::class, 'index'])->name('dashboard');
+    Route::get('/calendario/eventos', [EventController::class, 'calendar'])->name('events.calendar');
+    Route::get('/eventos/{event}', [EventController::class, 'show'])->name('events.show');
     Route::post('/eventos', [EventController::class, 'store'])->name('events.store');
     Route::put('/eventos/{event}', [EventController::class, 'update'])->name('events.update');
     Route::delete('/eventos/{event}', [EventController::class, 'destroy'])->name('events.destroy');
